@@ -2,7 +2,7 @@
 
 namespace App\Article\Actions;
 
-use App\Article\Repository\ArticleRepository;
+use App\Article\Repository\ArticleMapper;
 use App\Article\Responders\ListResponder;
 
 use App\Core\Action;
@@ -17,20 +17,23 @@ class ListAction extends Action
 {
     public function __construct(Container $container)
     {
-        $this->repository = new ArticleRepository();
+        $this->repository = new ArticleMapper();
         $this->responder  = new ListResponder($container);
     }
 
     public function __invoke(Request $request, Response $response, array $args = []) : ResponseInterface
     {
-        $articles = $this->repository->all();
+        $articleRecordSet = $this->repository->all();
 
-        // manipulate here
+        $status = count($articleRecordSet) ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
 
-        $status = true ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
+        // manipulate if needed
 
         return $this->responder->respond(
-            new Payload($status, $articles)
+            new Payload(
+                $status,
+                $articleRecordSet->getData()
+            )
         );
     }
 }

@@ -17,7 +17,7 @@ abstract class Model
     {
         $this->$key = $val;
     }
-    public function setData(array $data = []) : void
+    public function setData(array $data = [])
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
