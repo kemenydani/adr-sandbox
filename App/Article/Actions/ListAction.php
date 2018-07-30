@@ -29,7 +29,7 @@ class ListAction extends Action
 
         // manipulate if needed
 
-        return $this->responder->respond(
+        return $this->responder->__invoke(
             new Payload(
                 $status,
                 $articleRecordSet->getData()
