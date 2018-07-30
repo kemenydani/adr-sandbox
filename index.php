@@ -28,7 +28,12 @@ $container['view'] = function ($c) {
 };
 
 
-$app->get('/articles', App\Article\Actions\ListAction::class)->setName('articles');
+$app->get('/articles', App\Article\Actions\ListAction::class)
+    ->add('App\Article\Middlewares\ArticleMiddleware:test')
+    ->setName('articles');
+
+
+
 $app->get('/article/view/{title}', App\Article\Actions\ViewAction::class)->setName('article.view');
 
 try

@@ -16,8 +16,6 @@ class ListResponder extends Responder
 
     public function respond(Payload $payload) : ResponseInterface
     {
-        var_dump($payload->getResult());
-
         return $this->view->render($this->response, 'article/route.list.html.twig', [
             'foo' => 'foo'
         ]);
