@@ -23,6 +23,18 @@ class ArticleMapper extends RecordMapper
         );
     }
 
+    public function insertRecord(ArticleRecord $record)
+    {
+
+    }
+
+    public function updateRecord(ArticleRecord $record)
+    {
+
+    }
+
+    // create entity based queries...
+
     public function newRecord(array $row) : ArticleRecord
     {
         return new ArticleRecord($row);
