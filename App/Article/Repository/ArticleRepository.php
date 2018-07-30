@@ -9,11 +9,6 @@ class ArticleRepository extends Repository
 {
     static $prefix = '_xyz_';
     static $table = 'Article';
-    static $model = Article::class;
-
-    public function __construct()
-    {
-
-    }
-
+    static $model = \Article::class;
+    static $modelSet = \ArticleCollection::class;
 }

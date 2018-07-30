@@ -13,6 +13,7 @@ class DB extends \PDO
     private static  $_PASSWORD_ = '';
 
     public $stmt = null;
+    public $fetchMode = null;
 
     public function __construct($dsn, $username, $password, $options)
     {
@@ -22,18 +23,81 @@ class DB extends \PDO
         $this->exec("set names utf8");
     }
 
-    public function getStmt(){
+    public function getStmt()
+    {
         return $this->stmt;
     }
 
-    public static function instance()
+    public static function instance( $fetchMode = null )
     {
         if ( self::$_instance === null )
         {
             $dsn = 'mysql:host='.self::$_HOST_.';dbname='.self::$_DATABASE_.'';
             self::$_instance = new DB($dsn, self::$_USERNAME_, self::$_PASSWORD_, []);
         }
+
+        self::$_instance->setFetchMode(\PDO::FETCH_ASSOC);
+
+        if($fetchMode) self::$_instance->setFetchMode($fetchMode);
+
         return self::$_instance;
+    }
+
+    public function getRows($stmt = "", $bind = null)
+    {
+        return $this->get($stmt, $bind = null);
+    }
+
+    public function getRow($stmt = "", $bind = null)
+    {
+        return $this->get($stmt, $bind = null, false);
+    }
+
+    private function get($stmt = "", $bind = null, $fetchAll = true)
+    {
+        if(!strlen($stmt)) return null;
+
+        $binds = is_array($bind) ? $bind : ($bind !== null ? [$bind] : []);
+
+        $q = $this->prepare($stmt);
+
+        $bi = 1;
+        foreach($binds as $bk => $bv)
+        {
+            $n = is_string($bk) ? ':' . $bk : $bi;
+            $q->bindValue($n, $bv);
+            $bi++;
+        }
+
+        $q->execute();
+        $r = $fetchAll ? $q->fetchAll($this->getFetchMode()) : $q->fetch($this->getFetchMode());
+
+        return $r ? $r : [];
+    }
+
+    public function insertRow()
+    {
+
+    }
+
+    public function updateRow()
+    {
+
+    }
+
+    public function deleteRow()
+    {
+
+    }
+
+    public function getFetchMode()
+    {
+        return $this->fetchMode;
+    }
+
+    public function setFetchMode($mode)
+    {
+        $this->fetchMode = $mode;
     }
 
 }

@@ -5,17 +5,16 @@ namespace App\Article\Actions;
 use App\Article\Repository\ArticleRepository;
 use App\Article\Responders\ListResponder;
 
+use App\Core\Action;
+use App\Core\Payload;
 use Psr\Http\Message\ResponseInterface;
 
 use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ListAction
+class ListAction extends Action
 {
-    private $repository = [];
-    private $responder;
-
     public function __construct(Container $container)
     {
         $this->repository = new ArticleRepository();
@@ -28,6 +27,10 @@ class ListAction
 
         // manipulate here
 
-        return $this->responder->respond($articles);
+        $status = true ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
+
+        return $this->responder->respond(
+            new Payload($status, $articles)
+        );
     }
 }

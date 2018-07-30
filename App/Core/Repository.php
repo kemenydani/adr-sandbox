@@ -6,10 +6,8 @@ abstract class Repository implements RepositoryInterface
 {
     protected $db;
 
-    public function __construct()
-    {
-        $this->db = DB::instance();
-    }
+    static $table;
+    static $model;
 
     public function find( $payload )
     {
@@ -18,11 +16,26 @@ abstract class Repository implements RepositoryInterface
 
     public function all()
     {
-
+        return DB::instance()->getRows('SELECT * FROM ' . self::getTable() );
     }
 
     public static function getTable()
     {
+        return static::$table;
+    }
 
+    public function newRecordSet(array $rows)
+    {
+        $records = [];
+        foreach ($rows as $row)
+        {
+            $records[] = $this->newRecord($row);
+        }
+        return new static::$modelSet($records);
+    }
+
+    public function newRecord(array $row)
+    {
+        return new static::$model($row);
     }
 }
