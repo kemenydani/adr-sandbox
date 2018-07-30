@@ -7,9 +7,6 @@ use App\Core\RecordMapper;
 
 class ArticleMapper extends RecordMapper
 {
-    static $prefix = '_xyz_';
-    static $table = 'Article';
-
     private $db;
 
     public function __construct()
