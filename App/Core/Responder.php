@@ -25,6 +25,10 @@ abstract class Responder implements ResponderInterface
      */
     public $view;
 
+    /**
+     * Responder constructor.
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;

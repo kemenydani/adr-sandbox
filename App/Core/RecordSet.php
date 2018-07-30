@@ -4,6 +4,11 @@ namespace App\Core;
 
 class RecordSet extends \ArrayObject
 {
+    public function with($class)
+    {
+
+    }
+
     public function getData()
     {
         $iterator = $this->getIterator();

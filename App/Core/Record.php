@@ -2,11 +2,20 @@
 
 namespace App\Core;
 
-abstract class Model
+abstract class Record
 {
+    /**
+     * Record constructor.
+     * @param array $data
+     */
     public function __construct(array $data = [])
     {
         $this->setData($data);
+    }
+
+    public function with($class)
+    {
+
     }
 
     public function __get(string $key)
@@ -17,14 +26,24 @@ abstract class Model
     {
         $this->$key = $val;
     }
+
+    /**
+     * @param array $data
+     */
     public function setData(array $data = [])
     {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
+        foreach ($data as $key => $value)
+        {
+            if (property_exists($this, $key))
+            {
                 $this->{$key} = $value;
             }
         }
     }
+
+    /**
+     * @return array
+     */
     public function getData() : array
     {
         $properties = get_object_vars($this);

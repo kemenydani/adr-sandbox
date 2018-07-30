@@ -32,17 +32,28 @@ class Payload
     private $status;
     private $result;
 
+    /**
+     * Payload constructor.
+     * @param string $status
+     * @param array $result
+     */
     public function __construct(string $status, array $result = [])
     {
         $this->status = $status;
         $this->result = $result;
     }
 
+    /**
+     * @return string
+     */
     public function getStatus() : string
     {
         return $this->status;
     }
 
+    /**
+     * @return array
+     */
     public function getResult() : array
     {
         return $this->result;

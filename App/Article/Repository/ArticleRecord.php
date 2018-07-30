@@ -2,9 +2,9 @@
 
 namespace App\Article\Repository;
 
-use App\Core\Model;
+use App\Core\Record;
 
-class ArticleRecord extends Model
+class ArticleRecord extends Record
 {
     protected $id;
     protected $title;
