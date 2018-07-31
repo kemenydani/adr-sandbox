@@ -75,17 +75,34 @@ class DB extends \PDO
         return $r ? $r : [];
     }
 
-    public function insertRow()
+    public function insertRow($table, array $data)
+    {
+        $stmt  = " INSERT INTO {$table}";
+        $stmt .= "(" .  self::questionMarkList(count($data)) . ")";
+        $stmt .= "VALUES (" . rtrim(str_repeat('?,', count($data)),',') . ")";
+    }
+
+    public static function commaList($data)
     {
 
     }
 
-    public function updateRow()
+    public static function questionMarkList($count)
+    {
+        return rtrim(str_repeat('?,', $count),',');
+    }
+
+    public function updateRow($table, array $where)
     {
 
     }
 
-    public function deleteRow()
+    public function deleteRow($table, array $where)
+    {
+
+    }
+
+    public function wipeTable($table)
     {
 
     }
