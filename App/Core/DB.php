@@ -75,7 +75,7 @@ class DB extends \PDO
         return $r ? $r : [];
     }
 
-    public function insertRow($table, array $data) : ?int
+    public function insertRow($table, array $data)
     {
         try
         {
