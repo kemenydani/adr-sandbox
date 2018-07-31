@@ -75,26 +75,76 @@ class DB extends \PDO
         return $r ? $r : [];
     }
 
-    public function insertRow($table, array $data)
+    public function insertRow($table, array $data) : ?int
     {
-        $stmt  = " INSERT INTO {$table}";
-        $stmt .= "(" .  self::questionMarkList(count($data)) . ")";
-        $stmt .= "VALUES (" . rtrim(str_repeat('?,', count($data)),',') . ")";
+        try
+        {
+            $this->beginTransaction();
+
+            $query  = " INSERT INTO " . $table . " (" . implode(',', array_keys($data)) . ") VALUES (" . rtrim(str_repeat('?,', count($data)), ',') . ")";
+
+            $this->stmt = $this->prepare($query);
+
+            $bi = 1;
+            foreach(array_values($data) as $v)
+            {
+                $this->stmt->bindValue($bi, $v);
+                $bi++;
+            }
+
+            $executed = $this->stmt->execute();
+        }
+        catch(\Exception $e)
+        {
+            $executed = false;
+        }
+
+        if(!$executed)
+        {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return (int)$this->lastInsertId();
     }
 
-    public static function commaList($data)
+    public function updateRow($table, array $data, array $where) : bool
     {
+        try
+        {
+            $this->beginTransaction();
 
-    }
+            $what = rtrim(implode('=?,', array_keys($data)));
 
-    public static function questionMarkList($count)
-    {
-        return rtrim(str_repeat('?,', $count),',');
-    }
+            // TODO:: define where part
 
-    public function updateRow($table, array $where)
-    {
+            $query  = " UPDATE " . $table . " SET (" . $what . "))";
 
+            $this->stmt = $this->prepare($query);
+
+            $bi = 1;
+            foreach(array_values($data) as $v)
+            {
+                $this->stmt->bindValue($bi, $v);
+                $bi++;
+            }
+
+            $executed = $this->stmt->execute();
+        }
+        catch(\Exception $e)
+        {
+            $executed = false;
+        }
+
+        if(!$executed)
+        {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return $executed;
     }
 
     public function deleteRow($table, array $where)
