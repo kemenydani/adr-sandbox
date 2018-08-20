@@ -6,7 +6,8 @@ use App\Core\Record;
 
 class UserRecord extends Record
 {
-    protected $id;
-    protected $title;
-
+    protected $Id;
+    protected $UserName;
+    protected $Email;
+    protected $Password;
 }

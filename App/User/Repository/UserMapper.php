@@ -44,6 +44,16 @@ class UserMapper extends RecordMapper
         );
     }
 
+    public function getNotifications(UserRecord $UserRecord)
+    {
+        $stmt = "SELECT * FROM user_notification WHERE UserId = ? AND Touched = ?";
+
+        return $this->db->getRows($stmt, [
+            'UserId' => $UserRecord->getId(),
+            'Touched' => false
+        ]);
+    }
+
     public function insertRecord(UserRecord $record)
     {
 

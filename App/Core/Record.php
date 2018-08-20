@@ -22,6 +22,7 @@ abstract class Record
     {
         return $this->$key;
     }
+
     public function __set(string $key, $val)
     {
         $this->$key = $val;
