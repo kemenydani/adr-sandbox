@@ -44,7 +44,7 @@ class UserMapper extends RecordMapper
         );
     }
 
-    public function getNotifications(UserRecord $UserRecord)
+    public function getNotifications(UserRecord $UserRecord) : array
     {
         $stmt = "SELECT * FROM user_notification WHERE UserId = ? AND Touched = ?";
 
