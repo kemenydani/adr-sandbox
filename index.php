@@ -10,9 +10,13 @@ session_start([
     'read_and_close'  => true,
 ]);
 
-$app->group('/api', function() {
+$app->group('/api', function()
+{
     $this->get('/auth', App\User\Actions\AuthAction::class);
     $this->get('/articles', App\Article\Actions\ListAction::class);
+
+    $this->get('/user/notifications', App\User\Actions\NotificationAction::class);
+
 
 })->add(function($request, $response, $next) {
     $response = $next( $request, $response );
