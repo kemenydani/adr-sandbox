@@ -2,7 +2,7 @@
 
 namespace App\User\Actions;
 
-class NotificationAction
+class ViewAction
 {
 
 }
