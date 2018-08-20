@@ -2,7 +2,7 @@
 
 namespace App\User\Actions;
 
-use App\Article\Repository\ArticleMapper;
+use App\Article\Repository\UserMapper;
 use App\User\Responders\AuthResponder;
 
 use App\Core\Action;
@@ -17,7 +17,7 @@ class AuthAction extends Action
 {
     public function __construct(Container $container)
     {
-        $this->repository = new ArticleMapper();
+        $this->repository = new UserMapper();
         $this->responder  = new AuthResponder($container);
     }
 

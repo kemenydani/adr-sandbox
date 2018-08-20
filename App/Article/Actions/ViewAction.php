@@ -2,7 +2,7 @@
 
 namespace App\Article\Actions;
 
-use App\Article\Repository\ArticleMapper;
+use App\Article\Repository\UserMapper;
 use App\Article\Responders\ViewResponder;
 
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +18,7 @@ class ViewAction
 
     public function __construct(Container $container)
     {
-        $this->repository = new ArticleMapper();
+        $this->repository = new UserMapper();
         $this->responder  = new ViewResponder($container);
     }
 

@@ -1,15 +1,36 @@
 <?php
 
-namespace App\Article\Repository;
+namespace App\User\Repository;
 
 use App\Core\DB;
 use App\Core\RecordMapper;
 
-class ArticleMapper extends RecordMapper
+class UserMapper extends RecordMapper
 {
     private $db;
-    private $table = 'article';
-    private $id = 'Id';
+    private $table = 'user';
+    private $primary = 'Id';
+
+    const RECORDS = [
+        'Id' => [
+            'type'  => 'int',
+            'rules' => 'int,unique',
+        ],
+        'UserName' => [
+            'type' => 'string',
+            'rules' => 'min:0,max:40,filter:alphanumeric',
+            'default'  => null,
+        ],
+        'Email' => [
+            'type' => 'string',
+            'rules' => 'min:0,max:255,unique,filter:email',
+            'default'  => null,
+        ],
+        'Password' => [
+            'type' => 'string',
+            'rules' => 'min:6,match:password'
+        ]
+    ];
 
     public function __construct()
     {
