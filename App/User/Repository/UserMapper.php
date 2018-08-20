@@ -54,6 +54,15 @@ class UserMapper extends RecordMapper
         ]);
     }
 
+    /*
+    public function getProfile(UserRecord $UserRecord)
+    {
+        $stmt = "SELECT * FROM user_profile WHERE UserId = ?";
+
+        return $this->db->getRow($stmt, $UserRecord->getId());
+    }
+    */
+
     public function insertRecord(UserRecord $record)
     {
 
