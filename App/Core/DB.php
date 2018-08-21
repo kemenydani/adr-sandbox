@@ -45,12 +45,12 @@ class DB extends \PDO
 
     public function getRows($stmt = "", $bind = null)
     {
-        return $this->get($stmt, $bind = null);
+        return $this->get($stmt, $bind);
     }
 
     public function getRow($stmt = "", $bind = null)
     {
-        return $this->get($stmt, $bind = null, false);
+        return $this->get($stmt, $bind, false);
     }
 
     private function get($stmt = "", $bind = null, $fetchAll = true)

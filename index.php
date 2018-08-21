@@ -10,6 +10,16 @@ session_start([
     'read_and_close'  => true,
 ]);
 
+function array_keys_included(array $array = [], array $keyMap = [])
+{
+    return  array_intersect_key($array, array_flip($keyMap));
+}
+
+function array_keys_excluded(array $array  = [], array $keyMap = [])
+{
+    return array_diff_key($array, array_flip($keyMap));
+}
+
 $app->group('/api', function()
 {
     $this->get('/auth', App\User\Actions\AuthAction::class);

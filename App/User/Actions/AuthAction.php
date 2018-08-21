@@ -2,7 +2,7 @@
 
 namespace App\User\Actions;
 
-use App\Article\Repository\UserMapper;
+use App\User\Repository\UserMapper;
 use App\User\Responders\AuthResponder;
 
 use App\Core\Action;
@@ -27,13 +27,12 @@ class AuthAction extends Action
 
         // manipulate if needed
 
+        $User = $this->repository->find(1);
+
         return $this->responder->__invoke(
             new Payload(
                 $status,
-                [
-                    'userName' => 'snowy',
-                    'email' => 'kemenydani93@gmail.com'
-                ]
+                $User->getData(['Password'], true)
             )
         );
     }

@@ -44,6 +44,13 @@ class UserMapper extends RecordMapper
         );
     }
 
+    public function find($id)
+    {
+        $row = $this->db->getRow('SELECT * FROM ' . $this->table . ' WHERE Id = ? LIMIT 1 ', $id);
+
+        return $row ? $this->newRecord($row) : null;
+    }
+
     public function getNotifications(UserRecord $UserRecord) : array
     {
         $stmt = "SELECT * FROM user_notification WHERE UserId = ? AND Touched = ?";

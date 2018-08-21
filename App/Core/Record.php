@@ -43,11 +43,12 @@ abstract class Record
     }
 
     /**
+     * @param array $filter
+     * @param bool $exclude
      * @return array
      */
-    public function getData() : array
+    public function getData($filter = [], $exclude = false) : array
     {
-        $properties = get_object_vars($this);
-        return $properties;
+        return count($filter) ? ( $exclude ? array_keys_excluded(get_object_vars($this), $filter) : array_keys_included(get_object_vars($this), $filter) ) : get_object_vars($this);
     }
 }
