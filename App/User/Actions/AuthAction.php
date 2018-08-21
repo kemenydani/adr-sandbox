@@ -24,16 +24,19 @@ class AuthAction extends Action
 
     public function __invoke(Request $request, Response $response, array $args = []) : ResponseInterface
     {
-        $status = Payload::STATUS_FOUND;
+
 
         // manipulate if needed
 
-        $User = $this->repository->find(1);
+        $UserRecord = $this->repository->find(1);
+
+        $status = $UserRecord ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
+        $data   = $UserRecord ? $UserRecord->getData(UserRecord::USER_EXCLUDE_CREDENTIALS, true) : [];
 
         return $this->responder->__invoke(
             new Payload(
                 $status,
-                $User->getData(UserRecord::USER_EXCLUDE_CREDENTIALS, true)
+                $data
             )
         );
     }
