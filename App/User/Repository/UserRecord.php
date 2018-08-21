@@ -11,6 +11,8 @@ class UserRecord extends Record
     protected $Email;
     protected $Password;
 
+    const USER_EXCLUDE_CREDENTIALS = ['Password'];
+
     /**
      * @return mixed
      */

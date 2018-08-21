@@ -3,6 +3,7 @@
 namespace App\User\Actions;
 
 use App\User\Repository\UserMapper;
+use App\User\Repository\UserRecord;
 use App\User\Responders\AuthResponder;
 
 use App\Core\Action;
@@ -32,7 +33,7 @@ class AuthAction extends Action
         return $this->responder->__invoke(
             new Payload(
                 $status,
-                $User->getData(['Password'], true)
+                $User->getData(UserRecord::USER_EXCLUDE_CREDENTIALS, true)
             )
         );
     }
