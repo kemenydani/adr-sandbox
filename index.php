@@ -23,6 +23,7 @@ function array_keys_excluded(array $array  = [], array $keyMap = [])
 $app->group('/api', function()
 {
     $this->get('/auth', App\User\Actions\AuthAction::class);
+    $this->post('/signin', App\User\Actions\SignInAction::class);
     $this->get('/articles', App\Article\Actions\ListAction::class);
 
     $this->get('/user/notifications', App\User\Actions\NotificationAction::class);
