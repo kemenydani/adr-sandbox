@@ -51,13 +51,14 @@ class UserMapper extends RecordMapper
         return $row ? $this->newRecord($row) : null;
     }
 
-    public function getNotifications(UserRecord $UserRecord) : array
+    public function getNotifications(UserRecord $UserRecord, $limit = 5) : array
     {
-        $stmt = "SELECT * FROM user_notification WHERE UserId = ? AND Touched = ?";
+        $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
+
+        $stmt = "SELECT * FROM user_notification WHERE UserId = :UserId" . $stmtLimit;
 
         return $this->db->getRows($stmt, [
             'UserId' => $UserRecord->getId(),
-            'Touched' => false
         ]);
     }
 
