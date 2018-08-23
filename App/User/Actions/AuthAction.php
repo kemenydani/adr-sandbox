@@ -30,12 +30,13 @@ class AuthAction extends Action
         $status = $UserRecord ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
         $data   = $UserRecord ? $UserRecord->getData(UserRecord::USER_EXCLUDE_CREDENTIALS, true) : [];
 
+        /*
         $notifications = $this->repository->getNotifications($UserRecord);
         $conversations = $this->repository->getConversations($UserRecord);
 
         $data['Notifications'] = $notifications;
         $data['Conversations'] = $conversations;
-
+*/
         return $this->responder->__invoke(
             new Payload(
                 $status,

@@ -51,18 +51,18 @@ class UserMapper extends RecordMapper
         return $row ? $this->newRecord($row) : null;
     }
 
-    public function getNotifications(UserRecord $UserRecord, $limit = 5) : array
+    public function getNotifications(UserRecord $UserRecord, $limit = 100) : array
     {
         $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
 
-        $stmt = "SELECT * FROM user_notification WHERE UserId = :UserId" . $stmtLimit;
+        $stmt = "SELECT * FROM user_notification WHERE UserId = :UserId ORDER BY Id DESC" . $stmtLimit;
 
         return $this->db->getRows($stmt, [
             'UserId' => $UserRecord->getId(),
         ]);
     }
 
-    public function getConversations(UserRecord $UserRecord, $limit = 5) : array
+    public function getConversations(UserRecord $UserRecord, $limit = 100) : array
     {
         $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
 
