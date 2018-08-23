@@ -62,6 +62,36 @@ class UserMapper extends RecordMapper
         ]);
     }
 
+    public function getConversations(UserRecord $UserRecord, $limit = 5) : array
+    {
+        $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
+
+        $stmt = "SELECT * FROM user_conversation WHERE CreatorUserId = :UserId OR TargetUserId = :UserId"  . $stmtLimit;
+
+        $conversations = [];
+
+        $rows = $this->db->getRows($stmt, [
+            'UserId' => $UserRecord->getId(),
+        ]);
+
+        if(is_array($rows)) $conversations = $rows;
+
+        foreach($conversations as &$conversation)
+        {
+            $conversation['messages'] = [];
+
+            $stmt = "SELECT * FROM user_conversation_message WHERE ConversationId = :ConversationId";
+
+            $messages = $this->db->getRows($stmt, [
+                'ConversationId' => $conversation['Id'],
+            ]);
+
+            if(is_array($messages)) $conversation['messages'] = $messages;
+        }
+
+        return $conversations;
+    }
+
     /*
     public function getProfile(UserRecord $UserRecord)
     {

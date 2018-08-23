@@ -31,8 +31,10 @@ class AuthAction extends Action
         $data   = $UserRecord ? $UserRecord->getData(UserRecord::USER_EXCLUDE_CREDENTIALS, true) : [];
 
         $notifications = $this->repository->getNotifications($UserRecord);
+        $conversations = $this->repository->getConversations($UserRecord);
 
         $data['Notifications'] = $notifications;
+        $data['Conversations'] = $conversations;
 
         return $this->responder->__invoke(
             new Payload(

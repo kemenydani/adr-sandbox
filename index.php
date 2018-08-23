@@ -27,7 +27,7 @@ $app->group('/api', function()
     $this->get('/articles', App\Article\Actions\ListAction::class);
 
     $this->get('/user/notifications', App\User\Actions\NotificationAction::class);
-
+    $this->get('/user/conversations', App\User\Actions\ConversationAction::class);
 
 })->add(function($request, $response, $next) {
     $response = $next( $request, $response );
