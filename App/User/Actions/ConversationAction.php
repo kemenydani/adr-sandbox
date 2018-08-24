@@ -27,7 +27,7 @@ class ConversationAction extends Action
         // TODO: notifications
         $UserRecord = $this->repository->find(1);
 
-        $conversations = $this->repository->getConversations($UserRecord);
+        $conversations = $this->repository->getConversations($UserRecord, 5);
 
         $status = is_array($conversations) ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
 

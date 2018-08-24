@@ -62,25 +62,30 @@ class UserMapper extends RecordMapper
         ]);
     }
 
-    public function getConversations(UserRecord $UserRecord, $limit = 100) : array
+    public function getConversations(UserRecord $UserRecord, $limit = null) : array
     {
         $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
 
-        $stmt = "SELECT * FROM user_conversation WHERE CreatorUserId = :UserId OR TargetUserId = :UserId"  . $stmtLimit;
-
-        $conversations = [];
+        $stmt = <<<STMT
+            SELECT uc.*, u.UserName AS LastMessageUser, ucm.Text AS LastMessageText FROM user_conversation uc
+              LEFT JOIN user_conversation_message ucm
+                ON ucm.Id = ( SELECT max(Id) FROM user_conversation_message WHERE ucm.ConversationId = uc.Id )
+              LEFT JOIN user u
+                ON u.Id = ucm.SenderId
+            WHERE uc.CreatorUserId = :UserId OR uc.TargetUserId = :UserId $stmtLimit
+STMT;
 
         $rows = $this->db->getRows($stmt, [
             'UserId' => $UserRecord->getId(),
         ]);
-
+/*
         if(is_array($rows)) $conversations = $rows;
 
         foreach($conversations as &$conversation)
         {
             $conversation['messages'] = [];
 
-            $stmt = "SELECT * FROM user_conversation_message WHERE ConversationId = :ConversationId";
+            $stmt = "SELECT * FROM user_conversation_message WHERE ConversationId = :ConversationId ORDER BY Id DESC";
 
             $messages = $this->db->getRows($stmt, [
                 'ConversationId' => $conversation['Id'],
@@ -88,8 +93,8 @@ class UserMapper extends RecordMapper
 
             if(is_array($messages)) $conversation['messages'] = $messages;
         }
-
-        return $conversations;
+*/
+        return $rows;
     }
 
     /*
