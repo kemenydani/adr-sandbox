@@ -58,6 +58,18 @@ STMT;
         return $row ? $this->newRecord($row) : null;
     }
 
+    public function search($where = null)
+    {
+        $stmt = <<<STMT
+            SELECT * FROM `user` u 
+STMT;
+        $binds = [];
+
+        $rows = $this->db->getRows($stmt, $binds);
+
+        return $this->newRecordSet($rows);
+    }
+
     public function getNotifications(UserRecord $UserRecord, $limit = 100) : array
     {
         $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
