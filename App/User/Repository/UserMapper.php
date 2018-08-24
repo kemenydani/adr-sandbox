@@ -39,14 +39,21 @@ class UserMapper extends RecordMapper
 
     public function all()
     {
-        return $this->newRecordSet(
-            $this->db->getRows('SELECT * FROM ' . $this->table)
-        );
+        $stmt = <<<STMT
+            SELECT * FROM `user`
+STMT;
+
+        return $this->newRecordSet( $this->db->getRows($stmt) );
     }
 
     public function find($id)
     {
-        $row = $this->db->getRow('SELECT * FROM ' . $this->table . ' WHERE Id = ? LIMIT 1 ', $id);
+        $stmt = <<<STMT
+            SELECT * FROM `user`
+            WHERE Id = ? LIMIT 1 
+STMT;
+
+        $row = $this->db->getRow($stmt, $id);
 
         return $row ? $this->newRecord($row) : null;
     }
@@ -55,7 +62,11 @@ class UserMapper extends RecordMapper
     {
         $stmtLimit = $limit ? " LIMIT " . (int)$limit : "";
 
-        $stmt = "SELECT * FROM user_notification WHERE UserId = :UserId ORDER BY Id DESC" . $stmtLimit;
+        $stmt = <<<STMT
+            SELECT * FROM user_notification
+            WHERE UserId = :UserId 
+            ORDER BY Id DESC $stmtLimit
+STMT;
 
         return $this->db->getRows($stmt, [
             'UserId' => $UserRecord->getId(),
@@ -69,8 +80,8 @@ class UserMapper extends RecordMapper
         $stmt = <<<STMT
             SELECT uc.*, u.UserName AS LastMessageUser, ucm.Text AS LastMessageText FROM user_conversation uc
               LEFT JOIN user_conversation_message ucm
-                ON ucm.Id = ( SELECT max(Id) FROM user_conversation_message WHERE ucm.ConversationId = uc.Id )
-              LEFT JOIN user u
+                ON ucm.Id = ( SELECT max(Id) FROM user_conversation_message ucm2 WHERE ucm2.ConversationId = uc.Id )
+              LEFT JOIN `user` u
                 ON u.Id = ucm.SenderId
             WHERE uc.CreatorUserId = :UserId OR uc.TargetUserId = :UserId $stmtLimit
 STMT;
@@ -78,33 +89,9 @@ STMT;
         $rows = $this->db->getRows($stmt, [
             'UserId' => $UserRecord->getId(),
         ]);
-/*
-        if(is_array($rows)) $conversations = $rows;
 
-        foreach($conversations as &$conversation)
-        {
-            $conversation['messages'] = [];
-
-            $stmt = "SELECT * FROM user_conversation_message WHERE ConversationId = :ConversationId ORDER BY Id DESC";
-
-            $messages = $this->db->getRows($stmt, [
-                'ConversationId' => $conversation['Id'],
-            ]);
-
-            if(is_array($messages)) $conversation['messages'] = $messages;
-        }
-*/
         return $rows;
     }
-
-    /*
-    public function getProfile(UserRecord $UserRecord)
-    {
-        $stmt = "SELECT * FROM user_profile WHERE UserId = ?";
-
-        return $this->db->getRow($stmt, $UserRecord->getId());
-    }
-    */
 
     public function insertRecord(UserRecord $record)
     {
