@@ -46,14 +46,14 @@ STMT;
         return $this->newRecordSet( $this->db->getRows($stmt) );
     }
 
-    public function find($id)
+    public function find($keyword, $key = 'Id')
     {
         $stmt = <<<STMT
             SELECT * FROM `user`
-            WHERE Id = ? LIMIT 1 
+            WHERE $key = :$key LIMIT 1 
 STMT;
 
-        $row = $this->db->getRow($stmt, $id);
+        $row = $this->db->getRow($stmt, [ $key => $keyword ]);
 
         return $row ? $this->newRecord($row) : null;
     }

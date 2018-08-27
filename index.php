@@ -5,10 +5,7 @@ error_reporting(E_ALL);
 require 'vendor/autoload.php';
 require 'application.php';
 
-session_start([
-    'cookie_lifetime' => 86400,
-    'read_and_close'  => true,
-]);
+session_start();
 
 function array_keys_included(array $array = [], array $keyMap = [])
 {
