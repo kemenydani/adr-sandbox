@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -29,8 +30,10 @@ $app->group('/api', function()
     $this->get('/user/notifications', App\User\Actions\NotificationAction::class);
     $this->get('/user/conversations', App\User\Actions\ConversationAction::class);
 
-})->add(function($request, $response, $next) {
+})->add(function($request, $response, $next)
+{
     $response = $next( $request, $response );
+
     return $response
         ->withHeader( 'Access-Control-Allow-Origin', '*')
         ->withHeader( 'Access-Control-Allow-Credentials', 'true')
