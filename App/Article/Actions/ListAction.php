@@ -2,7 +2,7 @@
 
 namespace App\Article\Actions;
 
-use App\Article\Repository\UserMapper;
+use App\Article\Repository\ArticleMapper;
 use App\Article\Responders\ListResponder;
 
 use App\Core\Action;
@@ -17,7 +17,7 @@ class ListAction extends Action
 {
     public function __construct(Container $container)
     {
-        $this->repository = new UserMapper();
+        $this->repository = new ArticleMapper();
         $this->responder  = new ListResponder($container);
     }
 

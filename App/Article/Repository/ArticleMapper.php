@@ -18,33 +18,35 @@ class ArticleMapper extends RecordMapper
 
     public function all()
     {
-        return $this->newRecordSet(
-            $this->db->getRows('SELECT * FROM ' . $this->table)
-        );
+        $stmt = <<<STMT
+            SELECT * FROM `article`
+STMT;
+
+        return $this->newRecordSet( $this->db->getRows($stmt) );
     }
 
-    public function insertRecord(UserRecord $record)
+    public function insertRecord(ArticleRecord $record)
     {
 
     }
 
-    public function updateRecord(UserRecord $record)
+    public function updateRecord(ArticleRecord $record)
     {
 
     }
 
     // create entity based queries...
 
-    public function newRecord(array $row) : UserRecord
+    public function newRecord(array $row) : ArticleRecord
     {
-        return new UserRecord($row);
+        return new ArticleRecord($row);
     }
 
-    public function newRecordSet(array $rows) : UserRecordSet
+    public function newRecordSet(array $rows) : ArticleRecordSet
     {
         $records = [];
         foreach ($rows as $row) $records[] = $this->newRecord($row);
-        return new UserRecordSet($records);
+        return new ArticleRecordSet($records);
     }
 
 }

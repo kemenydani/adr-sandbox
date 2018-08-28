@@ -16,16 +16,7 @@ class ListResponder extends Responder
 
     public function respond(Payload $payload) : ResponseInterface
     {
-        //if($this->request->isXhr())
-
-        return $this->response->withJson([
-            ['title' => 'bar'],
-            ['title' => 'baz'],
-        ]);
-
-        return $this->view->render($this->response, 'article/route.list.html.twig', [
-            'foo' => 'foo'
-        ]);
+        return $this->response->withJson($payload->getResult());
     }
 
 }
