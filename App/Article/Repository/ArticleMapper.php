@@ -7,6 +7,9 @@ use App\Core\RecordMapper;
 
 class ArticleMapper extends RecordMapper
 {
+    /**
+     * @var DB
+     */
     private $db;
     private $table = 'article';
     private $id = 'Id';
@@ -23,6 +26,27 @@ class ArticleMapper extends RecordMapper
 STMT;
 
         return $this->newRecordSet( $this->db->getRows($stmt) );
+    }
+
+    public function paginate($search = [], $currentPage = 1, $perPage = 0, $sortBy = 'Id', $sortDirection = 'DESC')
+    {
+        $stmtOrder = " ORDER BY " . $sortBy . " " . $sortDirection . " ";
+        $stmtLimit = " LIMIT " . ( $currentPage - 1 ) * $perPage . ", " . $perPage ." ";
+
+        $stmt = <<<STMT
+            SELECT SQL_CALC_FOUND_ROWS * FROM `article`$stmtOrder $stmtLimit
+STMT;
+
+        $items = $this->db->getRows($stmt);
+        $totalItems = $this->db->totalRowCount();
+        $totalPages = (int)ceil($totalItems / $perPage);
+
+        $RecordSet = $this->newRecordSet( $items );
+        $RecordSet->setTotalItems($totalItems);
+        $RecordSet->setCurrentPage($currentPage);
+        $RecordSet->setTotalpages($totalPages);
+
+        return $RecordSet;
     }
 
     public function insertRecord(ArticleRecord $record)

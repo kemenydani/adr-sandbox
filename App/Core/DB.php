@@ -147,6 +147,11 @@ class DB extends \PDO
         return $executed;
     }
 
+    public function totalRowCount()
+    {
+        return (int)$this->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN);
+    }
+
     public function deleteRow($table, array $where)
     {
 
