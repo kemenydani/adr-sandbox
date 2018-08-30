@@ -28,25 +28,33 @@ STMT;
         return $this->newRecordSet( $this->db->getRows($stmt) );
     }
 
-    public function paginate($search = [], $currentPage = 1, $perPage = 0, $sortBy = 'Id', $sortDirection = 'DESC')
+    public function paginate($search = '', $page = 1, $rowsPerPage = 5, $sortBy = '', $descending = true)
     {
-        $stmtOrder = " ORDER BY " . $sortBy . " " . $sortDirection . " ";
-        $stmtLimit = " LIMIT " . ( $currentPage - 1 ) * $perPage . ", " . $perPage ." ";
+        $descending = toBool($descending);
+
+        $direction = $descending === true ? "DESC" : "ASC";
+
+        $orderBy = "ORDER BY $sortBy $direction";
+        $start = ( $page - 1 ) * $rowsPerPage;
+        $limit = "LIMIT $start, $rowsPerPage";
 
         $stmt = <<<STMT
-            SELECT SQL_CALC_FOUND_ROWS * FROM `article`$stmtOrder $stmtLimit
+            SELECT SQL_CALC_FOUND_ROWS * FROM `article` $orderBy $limit
 STMT;
 
         $items = $this->db->getRows($stmt);
         $totalItems = $this->db->totalRowCount();
-        $totalPages = (int)ceil($totalItems / $perPage);
+        $totalPages = (int)ceil($totalItems / $rowsPerPage);
 
-        $RecordSet = $this->newRecordSet( $items );
-        $RecordSet->setTotalItems($totalItems);
-        $RecordSet->setCurrentPage($currentPage);
-        $RecordSet->setTotalpages($totalPages);
-
-        return $RecordSet;
+        return [
+            'items' => $items,
+            'page' => (int)$page,
+            'totalPages' => (int)$totalPages,
+            'totalItems' => (int)$totalItems,
+            'sortBy' => $sortBy,
+            'rowsPerPage' => (int)$rowsPerPage,
+            'descending' => $descending,
+        ];
     }
 
     public function insertRecord(ArticleRecord $record)

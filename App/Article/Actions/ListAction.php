@@ -23,21 +23,26 @@ class ListAction extends Action
 
     public function __invoke(Request $request, Response $response, array $args = []) : ResponseInterface
     {
+        $queryParams = $request->getQueryParams();
 
-        $sortDirection = @$request->getQueryParam('descending') === true ?  'ASC' : 'DESC';
-        $currentPage = @$request->getQueryParam('currentPage') ? $request->getQueryParam('currentPage') : 1;
-        $perPage = @$request->getQueryParam('perPage') ? $request->getQueryParam('perPage') : 5;
+        $sortBy = strlen(@$queryParams['sortBy']) ? $queryParams['sortBy'] : 'Id';
 
-        $articleRecordSet = $this->repository->paginate([], $currentPage, $perPage, $sortBy = 'Id', $sortDirection);
+        $result = $this->repository->paginate(
+            @$queryParams['search'],
+            @$queryParams['page'],
+            @$queryParams['rowsPerPage'],
+            $sortBy,
+            @$queryParams['descending']
+        );
 
-        $status = count($articleRecordSet) ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
+        $status = count($result) ? Payload::STATUS_FOUND : Payload::STATUS_NOT_FOUND;
 
         // manipulate if needed
 
         return $this->responder->__invoke(
             new Payload(
                 $status,
-                $articleRecordSet->getPaginatedData()
+                $result
             )
         );
     }

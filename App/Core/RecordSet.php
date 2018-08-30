@@ -24,7 +24,7 @@ class RecordSet extends \ArrayObject
             'items' => $this->getData(),
             'totalItems' => $this->getTotalItems(),
             'totalPages' => $this->getTotalPages(),
-            'currentPage' => $this->getCurrentPage()
+            'page' => $this->getCurrentPage()
         ];
     }
 
