@@ -28,7 +28,7 @@ class ListAction extends Action
         $result = $this->repository->paginate(
             @$queryParams['search'],
             @$queryParams['page'],
-            @$queryParams['rowsPerPage'],
+            @$queryParams['perPage'],
             @$queryParams['sortBy'],
             @$queryParams['descending']
         );

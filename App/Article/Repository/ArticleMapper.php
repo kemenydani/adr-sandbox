@@ -14,6 +14,8 @@ class ArticleMapper extends RecordMapper
     private $table = 'article';
     private $id = 'Id';
 
+    const PAGINATION_PER_PAGE = 5;
+
     public function __construct()
     {
         $this->db = DB::instance();
@@ -28,34 +30,33 @@ STMT;
         return $this->newRecordSet( $this->db->getRows($stmt) );
     }
 
-    public function paginate($search = '', $page = null, $rowsPerPage = null, $sortBy = null, $descending = true)
+    public function paginate($search = '', $page, $perPage, $sortBy, $descending)
     {
-        $rowsPerPage = $rowsPerPage ? $rowsPerPage : 5;
+        $perPage = $perPage ? $perPage : self::PAGINATION_PER_PAGE;
         $page = $page ? $page : 1;
         $descending = toBool($descending);
         $direction = $descending === true ? "DESC" : "ASC";
 
-        $orderBy = @strlen($sortBy) ? " ORDER BY $sortBy $direction" : "";
-        $start = ( $page - 1 ) * $rowsPerPage;
-        $limit = " LIMIT $start, $rowsPerPage ";
+        $order = @strlen($sortBy) ? " ORDER BY $sortBy $direction" : "";
+
+        $start = ( $page - 1 ) * $perPage;
+        $limit = " LIMIT $start, $perPage ";
 
         $stmt = <<<STMT
-            SELECT SQL_CALC_FOUND_ROWS * FROM `article` $orderBy $limit
+            SELECT SQL_CALC_FOUND_ROWS * FROM `article` $order $limit
 STMT;
 
-        $items = $this->db->getRows($stmt);
         $totalItems = $this->db->totalRowCount();
-        $totalPages = @(int)ceil($totalItems / $rowsPerPage);
+        $totalPages = @ceil($totalItems / $perPage);
 
         return [
-            'items' => $items,
-            'stmt' => $stmt,
+            'items' => $this->db->getRows($stmt),
             'pagination' => [
                 'page' => (int)$page,
-                'totalPages' => (int)$totalPages,
-                'totalItems' => (int)$totalItems,
+                'perPage' => $perPage,
+                'totalPages' => $totalPages,
+                'totalItems' => $this->db->totalRowCount(),
                 'sortBy' => $sortBy,
-                'rowsPerPage' => (int)$rowsPerPage,
                 'descending' => $descending,
             ]
         ];
