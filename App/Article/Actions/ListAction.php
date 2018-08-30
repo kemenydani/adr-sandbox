@@ -25,13 +25,11 @@ class ListAction extends Action
     {
         $queryParams = $request->getQueryParams();
 
-        $sortBy = strlen(@$queryParams['sortBy']) ? $queryParams['sortBy'] : 'Id';
-
         $result = $this->repository->paginate(
             @$queryParams['search'],
             @$queryParams['page'],
             @$queryParams['rowsPerPage'],
-            $sortBy,
+            @$queryParams['sortBy'],
             @$queryParams['descending']
         );
 
