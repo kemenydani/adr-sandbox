@@ -30,32 +30,32 @@ STMT;
         return $this->newRecordSet( $this->db->getRows($stmt) );
     }
 
-    public function paginate($search = '', $page, $perPage, $sortBy, $descending)
+    public function paginate($search = '', $page, $rowsPerPage, $sortBy, $descending)
     {
-        $perPage = $perPage ? $perPage : self::PAGINATION_PER_PAGE;
+        $rowsPerPage = $rowsPerPage ? $rowsPerPage: self::PAGINATION_PER_PAGE;
         $page = $page ? $page : 1;
         $descending = toBool($descending);
         $direction = $descending === true ? "DESC" : "ASC";
 
         $order = @strlen($sortBy) ? " ORDER BY $sortBy $direction" : "";
 
-        $start = ( $page - 1 ) * $perPage;
-        $limit = " LIMIT $start, $perPage ";
+        $start = ( $page - 1 ) * $rowsPerPage;
+        $limit = " LIMIT $start, $rowsPerPage ";
 
         $stmt = <<<STMT
             SELECT SQL_CALC_FOUND_ROWS * FROM `article` $order $limit
 STMT;
 
         $totalItems = $this->db->totalRowCount();
-        $totalPages = @ceil($totalItems / $perPage);
+        $totalPages = @ceil($totalItems / $rowsPerPage);
 
         return [
             'items' => $this->db->getRows($stmt),
             'pagination' => [
                 'page' => (int)$page,
-                'perPage' => $perPage,
-                'totalPages' => $totalPages,
-                'totalItems' => $this->db->totalRowCount(),
+                'rowsPerPage' => (int)$rowsPerPage,
+                'totalPages' => (int)$totalPages,
+                'totalItems' => (int)$this->db->totalRowCount(),
                 'sortBy' => $sortBy,
                 'descending' => $descending,
             ]
